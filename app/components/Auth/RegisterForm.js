@@ -29,7 +29,9 @@ const RegisterForm = () => {
                     setErrors(data.errors)
                 }
                 if (data) {
-                    localStorage.setItem("user", JSON.stringify(data.user))
+                    if (typeof localStorage !== 'undefined') {
+                        localStorage.setItem("user", JSON.stringify(data.user))
+                    }
                     router.push("/")
                 }
             } catch (error) {

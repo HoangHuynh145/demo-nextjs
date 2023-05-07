@@ -5,7 +5,10 @@ import { useRouter } from 'next/navigation'
 import UserAPI from '@/app/lib/api/user'
 
 const Settings = ({ params }) => {
-    const user = JSON.parse(localStorage.getItem('user')).user
+    let user
+    if (typeof localStorage !== 'undefined') {
+        user = JSON.parse(localStorage.getItem('user'));
+    }
     const router = useRouter()
 
     const [userInfo, setUserInfo] = useState({
@@ -31,7 +34,9 @@ const Settings = ({ params }) => {
             const res = await UserAPI.updateProfile(userUpdate, user.token)
             if (res.status === 200) {
                 const newUser = { ...userUpdate, token: user.token }
-                localStorage.setItem('user', JSON.stringify(newUser))
+                if (typeof localStorage !== 'undefined') {
+                    localStorage.setItem('user', JSON.stringify(newUser))
+                }
                 router.push(`/profile/${userUpdate.username}`)
             }
         } catch (error) {
