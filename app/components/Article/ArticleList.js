@@ -7,14 +7,15 @@ import { useTagContext } from '@/app/context/TagContext'
 import Loader from '../layout/Loader'
 import useSWR from 'swr'
 import fetcher from '@/app/lib/utils/Fetcher'
+import { usePageContext } from '@/app/context/PageContext'
 
 const ArticleList = () => {
-    const [currentPage, setCurrentPage] = useState(1)
+    const { currentPage, setTotalPages } = usePageContext()
     const [articles, setArticles] = useState([])
-    const [toltalPages, setToltalPages] = useState()
     const { selectedTag, setSelectedTag } = useTagContext()
     const [fetchUrl, setFetchUrl] = useState('')
     const { data, error } = useSWR(fetchUrl, fetcher)
+
 
     useEffect(() => {
         if (selectedTag !== '') {
@@ -28,9 +29,9 @@ const ArticleList = () => {
     useEffect(() => {
         if (data) {
             setArticles(data.articles)
-            setToltalPages(Math.ceil((data.articlesCount) / 10))
+            setTotalPages(Math.ceil((data.articlesCount) / 10))
         }
-    }, [data])
+    }, [data, setTotalPages])
 
     if (!data) {
         return <Loader />
@@ -55,11 +56,7 @@ const ArticleList = () => {
             </ul>
             {articles.map(article => <div key={article.slug}><ArticleItem article={article} /></div>)}
             <ul className='flex'>
-                <Pagination
-                    totalPage={toltalPages}
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                />
+                <Pagination />
             </ul>
         </>
     )

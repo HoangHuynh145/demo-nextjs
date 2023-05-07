@@ -1,18 +1,27 @@
 'use client'
 
+import { usePageContext } from '@/app/context/PageContext'
 import { useEffect, useState, useMemo } from 'react'
 
-const Pagination = ({ totalPage, currentPage, setCurrentPage }) => {
+const Pagination = () => {
+    const {
+        totalPages,
+        currentPage,
+        setCurrentPage,
+        maxPageNumberLimit,
+        setMaxPageNumberLimit,
+        minPageNumberLimit,
+        setminPageNumberLimit
+    } = usePageContext()
+
     const pages = useMemo(() => {
         const pagesNumber = []
-        for (let i = 1; i <= totalPage; i++) {
+        for (let i = 1; i <= totalPages; i++) {
             pagesNumber.push(i)
         }
         return pagesNumber
-    }, [totalPage])
+    }, [totalPages])
 
-    const [maxPageNumberLimit, setMaxPageNumberLimit] = useState(10)
-    const [minPageNumberLimit, setminPageNumberLimit] = useState(0)
     const [currentItems, setCurrentItems] = useState(pages.slice(0, 10))
 
     const renderPagination = pages?.map(page => {
@@ -71,10 +80,14 @@ const Pagination = ({ totalPage, currentPage, setCurrentPage }) => {
             setMaxPageNumberLimit(prev => prev - 8)
             setminPageNumberLimit(prev => prev - 8)
         }
-        setCurrentItems(pages.slice(minPageNumberLimit, maxPageNumberLimit))
-    }, [currentPage, maxPageNumberLimit, minPageNumberLimit, pages])
+    }, [currentPage, maxPageNumberLimit, minPageNumberLimit, setMaxPageNumberLimit, setminPageNumberLimit])
 
-    if (pages.length > 1) {
+    useEffect(() => {
+        setCurrentItems(pages.slice(minPageNumberLimit, maxPageNumberLimit))
+    }, [maxPageNumberLimit, minPageNumberLimit, pages])
+
+
+    if (totalPages > 1) {
         return (
             <>
                 <li
