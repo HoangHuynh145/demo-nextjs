@@ -6,18 +6,17 @@ import Image from 'next/image'
 import { useTagContext } from '@/app/context/TagContext'
 import Link from 'next/link'
 import ArticleAPI from '@/app/lib/api/article'
+import checkLogin from '@/app/lib/utils/CheckLogin'
+import { useRouter } from 'next/navigation'
 
 const ArticleItem = ({ article }) => {
-    let user 
-    if (typeof localStorage !== 'undefined') {
-        user = JSON.parse(localStorage.getItem('user'));
-    }
+    const user = checkLogin()
+    const router = useRouter()
     const { setSelectedTag } = useTagContext()
     const [favoriteState, setFavoriteState] = useState({
         favoritesCount: article.favoritesCount,
         isFavorite: article.favorited
     })
-
 
     const handleUpdateFavorite = async () => {
         if (user) {
@@ -38,7 +37,7 @@ const ArticleItem = ({ article }) => {
                 console.log(error)
             }
         } else {
-            console.log('dang nhap')
+            router.push("/user/login")
         }
     }
 

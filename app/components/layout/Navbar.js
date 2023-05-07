@@ -5,12 +5,10 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import NavbarItemsAuth from '../common/NavbarItemsAuth';
 import NavbarItemsUser from '../common/NavbarItemsUser';
+import checkLogin from '@/app/lib/utils/CheckLogin';
 
 const Navbar = () => {
-    let user
-    if (typeof localStorage !== 'undefined') {
-        user = JSON.parse(localStorage.getItem('user'));
-    }
+    const user = checkLogin()
     const pathname = usePathname();
     const routeUser = pathname.split('/')[2]
 

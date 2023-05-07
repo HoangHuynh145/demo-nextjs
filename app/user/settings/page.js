@@ -3,12 +3,10 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import UserAPI from '@/app/lib/api/user'
+import checkLogin from '@/app/lib/utils/CheckLogin'
 
-const Settings = ({ params }) => {
-    let user
-    if (typeof localStorage !== 'undefined') {
-        user = JSON.parse(localStorage.getItem('user'));
-    }
+const Settings = () => {
+    let user = checkLogin()
     const router = useRouter()
 
     const [userInfo, setUserInfo] = useState({

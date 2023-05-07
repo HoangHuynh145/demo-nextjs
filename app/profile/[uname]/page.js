@@ -7,12 +7,10 @@ import ArticleAPI from '@/app/lib/api/article'
 import Loader from '@/app/components/layout/Loader'
 import ArticleItem from '@/app/components/Article/ArticleItem'
 import { FiSettings } from "react-icons/fi"
+import checkLogin from '@/app/lib/utils/CheckLogin'
 
 const UserProfile = ({ params }) => {
-    let user
-    if (typeof localStorage !== 'undefined') {
-        user = JSON.parse(localStorage.getItem('user'));
-    }
+    const user = checkLogin()
     const username = params.uname
     const [author, setAuthor] = useState()
     const [favoritesArticle, setFavoritesArticle] = useState([])

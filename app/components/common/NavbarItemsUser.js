@@ -1,13 +1,10 @@
+import checkLogin from '@/app/lib/utils/CheckLogin'
 import Link from 'next/link'
 import React from 'react'
 import { FiSettings } from "react-icons/fi"
 
 const NavbarItemsUser = ({ routeUser }) => {
-    let user
-    if (typeof localStorage !== 'undefined') {
-        user = JSON.parse(localStorage.getItem('user'));
-    }
-    const { username } = user
+    const { username } = checkLogin()
 
     return (
         <>
