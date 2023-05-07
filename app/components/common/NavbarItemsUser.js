@@ -3,7 +3,11 @@ import React from 'react'
 import { FiSettings } from "react-icons/fi"
 
 const NavbarItemsUser = ({ routeUser }) => {
-    const { username } = JSON.parse(window.localStorage.getItem('user'))
+    let user
+    if (typeof window !== 'undefined') {
+        user = JSON.parse(window.localStorage.getItem('user'))
+    }
+    const { username } = user
 
     return (
         <>

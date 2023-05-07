@@ -9,7 +9,10 @@ import ArticleItem from '@/app/components/Article/ArticleItem'
 import { FiSettings } from "react-icons/fi"
 
 const UserProfile = ({ params }) => {
-    const user = window.localStorage.getItem('user')
+    let user
+    if (typeof window !== 'undefined') {
+        user = JSON.parse(window.localStorage.getItem('user'))
+    }
     const username = params.uname
     const [author, setAuthor] = useState()
     const [favoritesArticle, setFavoritesArticle] = useState([])
