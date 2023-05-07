@@ -17,7 +17,7 @@ const Settings = ({ params }) => {
     })
 
     const handleLogout = () => {
-        window.localStorage.removeItem('user')
+        localStorage.removeItem('user')
         router.push("/")
     }
 
@@ -31,7 +31,7 @@ const Settings = ({ params }) => {
             const res = await UserAPI.updateProfile(userUpdate, user.token)
             if (res.status === 200) {
                 const newUser = { ...userUpdate, token: user.token }
-                window.localStorage.setItem('user', JSON.stringify(newUser))
+                localStorage.setItem('user', JSON.stringify(newUser))
                 router.push(`/profile/${userUpdate.username}`)
             }
         } catch (error) {
