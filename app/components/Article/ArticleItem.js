@@ -8,15 +8,24 @@ import Link from 'next/link'
 import ArticleAPI from '@/app/lib/api/article'
 import checkLogin from '@/app/lib/utils/CheckLogin'
 import { useRouter } from 'next/navigation'
+import { usePageContext } from '@/app/context/PageContext'
 
 const ArticleItem = ({ article }) => {
     const user = checkLogin()
     const router = useRouter()
+    const { setCurrentPage, setMaxPageNumberLimit, setminPageNumberLimit } = usePageContext()
     const { setSelectedTag } = useTagContext()
     const [favoriteState, setFavoriteState] = useState({
         favoritesCount: article.favoritesCount,
         isFavorite: article.favorited
     })
+
+    const handleChangeTag = (tag) => {
+        setSelectedTag(tag)
+        setCurrentPage(1)
+        setMaxPageNumberLimit(10)
+        setminPageNumberLimit(0)
+    }
 
     const handleUpdateFavorite = async () => {
         if (user) {
@@ -87,7 +96,7 @@ const ArticleItem = ({ article }) => {
                             <li
                                 key={tag}
                                 className='px-1.5 rounded-full border border-slate-400/70 leading-5 cursor-pointer hover:border-green-main'
-                                onClick={() => setSelectedTag(tag)}
+                                onClick={() => handleChangeTag(tag)}
                             >
                                 {tag}
                             </li>
