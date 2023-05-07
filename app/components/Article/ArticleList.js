@@ -2,39 +2,37 @@
 
 import { useState, useEffect } from 'react'
 import ArticleItem from './ArticleItem'
-import ArticleAPI from '../../lib/api/article'
 import Pagination from '../layout/Pagination'
 import { useTagContext } from '@/app/context/TagContext'
 import Loader from '../layout/Loader'
-
+import useSWR from 'swr'
+import fetcher from '@/app/lib/utils/Fetcher'
 
 const ArticleList = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [articles, setArticles] = useState([])
     const [toltalPages, setToltalPages] = useState()
     const { selectedTag, setSelectedTag } = useTagContext()
+    const [fetchUrl, setFetchUrl] = useState('')
+    const { data, error } = useSWR(fetchUrl, fetcher)
+
+    useEffect(() => {
+        if (selectedTag !== '') {
+            setFetchUrl(`${process.env.NEXT_PUBLIC_BASE_URL}/articles?tag=${selectedTag}&limit=10&offset=${(currentPage - 1) * 10}`)
+        } else {
+            setFetchUrl(`${process.env.NEXT_PUBLIC_BASE_URL}/articles?limit=10&offset=${(currentPage - 1) * 10}`)
+        }
+    }, [currentPage, selectedTag])
 
 
     useEffect(() => {
-        setArticles([])
-        const getArticles = async () => {
-            try {
-                let res
-                if (selectedTag !== '') {
-                    res = await ArticleAPI.Articles((currentPage - 1) * 10, selectedTag)
-                } else {
-                    res = await ArticleAPI.Articles(currentPage * 10)
-                }
-                setArticles(res.data.articles)
-                setToltalPages(Math.ceil((res.data.articlesCount) / 10))
-            } catch (error) {
-                console.log(error)
-            }
+        if (data) {
+            setArticles(data.articles)
+            setToltalPages(Math.ceil((data.articlesCount) / 10))
         }
-        getArticles()
-    }, [currentPage, selectedTag])
+    }, [data])
 
-    if (articles.length === 0) {
+    if (!data) {
         return <Loader />
     }
 
@@ -66,5 +64,7 @@ const ArticleList = () => {
         </>
     )
 }
+
+
 
 export default ArticleList

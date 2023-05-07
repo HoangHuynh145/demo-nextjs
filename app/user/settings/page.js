@@ -32,8 +32,9 @@ const Settings = () => {
             const res = await UserAPI.updateProfile(userUpdate, user.token)
             if (res.status === 200) {
                 const newUser = { ...userUpdate, token: user.token }
+                const { password, ...other } = newUser
                 if (typeof localStorage !== 'undefined') {
-                    localStorage.setItem('user', JSON.stringify(newUser))
+                    localStorage.setItem('user', JSON.stringify(other))
                 }
                 router.push(`/profile/${userUpdate.username}`)
             }

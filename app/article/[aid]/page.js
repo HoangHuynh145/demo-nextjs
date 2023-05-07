@@ -1,27 +1,22 @@
 'use client'
 
-import { marked } from 'marked';
-import ArticleAPI from '@/app/lib/api/article';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react'
 import Loader from '@/app/components/layout/Loader';
 import Link from 'next/link';
+import useSWR from 'swr'
+import fetcher from '@/app/lib/utils/Fetcher';
+
 
 const ArticleDetail = ({ params }) => {
     const [article, setArticle] = useState()
+    const { data, error } = useSWR(`${process.env.NEXT_PUBLIC_BASE_URL}/articles/${params.aid}`, fetcher)
 
     useEffect(() => {
-        const getArticleDetal = async () => {
-            try {
-                const res = await ArticleAPI.Article(params.aid)
-                setArticle(res.data.article)
-            } catch (error) {
-                console.log(error)
-            }
+        if (data) {
+            setArticle(data.article)
         }
-        getArticleDetal()
-    }, [params])
+    }, [data])
 
     if (!article) {
         return <Loader />
@@ -54,7 +49,7 @@ const ArticleDetail = ({ params }) => {
             <div className='max-w-6xl mx-auto'>
                 <p className='text-xl'>{article.body}</p>
                 <ul className='flex gap-1 items-center text-xs text-slate-400/50 mt-8 mb-4'>
-                    {article.tagList.map(tag => (
+                    {article?.tagList.map(tag => (
                         <li
                             key={tag}
                             className='px-1.5 rounded-full border border-slate-400/50 leading-5 cursor-default'

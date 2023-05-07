@@ -27,11 +27,9 @@ const ArticleItem = ({ article }) => {
             }))
             try {
                 if (favoriteState.isFavorite) {
-                    const res = await ArticleAPI.removeFavoriteArticle(article.slug, user.token)
-                    console.log(res.data)
+                    await ArticleAPI.removeFavoriteArticle(article.slug, user.token)
                 } else {
-                    const res = await ArticleAPI.addFavoriteArticle(article.slug, user.token)
-                    console.log(res.data)
+                    await ArticleAPI.addFavoriteArticle(article.slug, user.token)
                 }
             } catch (error) {
                 console.log(error)

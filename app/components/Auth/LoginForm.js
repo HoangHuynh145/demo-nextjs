@@ -28,7 +28,7 @@ const LoginForm = () => {
                 }
                 if (data) {
                     if (typeof localStorage !== 'undefined') {
-                        localStorage.setItem("user", JSON.stringify(data))
+                        localStorage.setItem("user", JSON.stringify(data.user))
                     }
                     router.push("/")
                 }

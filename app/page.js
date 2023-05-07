@@ -5,21 +5,19 @@ import ArticleAPI from './lib/api/article'
 import { useEffect, useState } from 'react'
 import Loader from './components/layout/Loader'
 import TagList from './components/Article/TagList'
+import useSWR from 'swr'
+import fetcher from './lib/utils/Fetcher'
 
 export default function Home() {
   const [tags, setTags] = useState([])
+  const { data, error } = useSWR(`${process.env.NEXT_PUBLIC_BASE_URL}/tags`, fetcher)
+
 
   useEffect(() => {
-    const getArticleTags = async () => {
-      try {
-        const res = await ArticleAPI.getTags()
-        setTags(res.data.tags)
-      } catch (error) {
-        console.log(error)
-      }
+    if (data) {
+      setTags(data.tags)
     }
-    getArticleTags()
-  }, [])
+  }, [data])
 
   return (
     <>
@@ -36,7 +34,7 @@ export default function Home() {
             <div className='bg-gray-100 rounded-sm py-1.5 px-2.5'>
               <p className='mb-1'>Popular Tags</p>
               <ul className='flex flex-wrap gap-1'>
-                {tags.length > 0 ? <TagList tags={tags} /> : <Loader />}
+                {data ? <TagList tags={tags} /> : <Loader />}
               </ul>
             </div>
           </div>
