@@ -41,14 +41,14 @@ const ArticleList = () => {
         <>
             <ul className='flex items-center'>
                 <li
-                    className='header-article-list cursor-pointer'
+                    className={`header-article-list ${selectedTag === '' && 'active'}`}
                     onClick={() => setSelectedTag('')}
                 >
                     Global Feed
                 </li>
                 {
                     selectedTag && (
-                        <li className='py-2 px-4 border-b-2 border-green-main max-w-max text-green-main'>
+                        <li className='header-article-list active'>
                             #{selectedTag}
                         </li>
                     )

@@ -4,12 +4,14 @@ import React from 'react'
 
 const TagList = ({ tags }) => {
     const { setSelectedTag } = useTagContext()
-    const { setCurrentPage } = usePageContext()
+    const { setCurrentPage, setMaxPageNumberLimit, setminPageNumberLimit } = usePageContext()
 
 
     const handleChangeTag = (tag) => {
         setSelectedTag(tag)
         setCurrentPage(1)
+        setMaxPageNumberLimit(10)
+        setminPageNumberLimit(0)
     }
 
     return (

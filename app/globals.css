@@ -44,7 +44,7 @@
   }
 
   .header-article-list {
-    @apply py-2 px-4 border-b max-w-max text-gray-500/80 font-semibold border-b-transparent;
+    @apply py-2 px-4 border-b-2 max-w-max text-gray-500/80 font-semibold border-b-transparent  cursor-pointer;
   }
 
   .header-article-list.active {
