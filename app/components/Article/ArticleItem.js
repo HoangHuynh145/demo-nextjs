@@ -1,47 +1,97 @@
-import React from 'react'
+'use client'
+
+import { useState } from 'react'
 import { FaHeart } from "react-icons/fa"
 import Image from 'next/image'
+import { useTagContext } from '@/app/context/TagContext'
+import Link from 'next/link'
+import ArticleAPI from '@/app/lib/api/article'
 
-const dummyAvt = "https://api.realworld.io/images/demo-avatar.png"
+const ArticleItem = ({ article }) => {
+    const user = JSON.parse(window.localStorage.getItem('user'))
+    const { setSelectedTag } = useTagContext()
+    const [favoriteState, setFavoriteState] = useState({
+        favoritesCount: article.favoritesCount,
+        isFavorite: article.favorited
+    })
 
-const ArticleItem = () => {
+
+    const handleUpdateFavorite = async () => {
+        if (user) {
+            setFavoriteState(prevState => ({
+                ...prevState,
+                favoritesCount: prevState.isFavorite ? prevState.favoritesCount - 1 : prevState.favoritesCount + 1,
+                isFavorite: !prevState.isFavorite
+            }))
+            try {
+                if (favoriteState.isFavorite) {
+                    const res = await ArticleAPI.removeFavoriteArticle(article.slug, user.token)
+                    console.log(res.data)
+                } else {
+                    const res = await ArticleAPI.addFavoriteArticle(article.slug, user.token)
+                    console.log(res.data)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        } else {
+            console.log('dang nhap')
+        }
+    }
+
     return (
         <article className='border-t border-slate-500/50 py-6 px-2'>
-            <header className='flex justify-between items-center mb-4'>
-                <div className='flex items-center'>
+            <div className='flex justify-between items-center mb-4'>
+                <div className='author-container'>
                     <Image
-                        src={dummyAvt}
+                        src={article.author.image}
                         width={32}
                         height={32}
                         alt='Picture of the author'
                         className='rounded-full '
                     />
                     <div className='ml-1'>
-                        <span className='text-green-main hover:underline hover:text-green-main-dark cursor-pointer '>Anah Benešová</span>
-                        <p className='text-xs text-slate-500/50'>Fri Dec 09 2022</p>
+                        <Link href={`/profile/${article.author.username}`}>
+                            <span className='text-green-main hover:underline hover:text-green-main-dark cursor-pointer'>
+                                {article.author.username}
+                            </span>
+                        </Link>
+                        <p className='text-xs text-slate-500/50'>{article.createdAt}</p>
                     </div>
                 </div>
                 <button
-                    className='px-2 py-1 rounded-sm flex items-center border border-green-main text-sm gap-1 text-green-main leading-4 h-7 hover:text-white hover:bg-green-main'
+                    className={`article-btn-like ${favoriteState?.isFavorite && 'bg-green-main text-white'}`}
+                    onClick={handleUpdateFavorite}
                 >
                     <FaHeart size={14} />
-                    1054
+                    {favoriteState?.favoritesCount}
                 </button>
-            </header>
+            </div>
             <div>
-                <p className='text-2xl text-black font-semibold mb-0.5'>
-                    If we quantify the alarm, we can get to the FTP pixel through the online SSL interface!
-                </p>
-                <p className='line-clamp-2 text-slate-500/50 mb-4'>
-                    Omnis perspiciatis qui quia commodi sequi modi. Nostrum quam aut cupiditate est facere omnis possimus. Tenetur similique nemo illo soluta molestias facere quo. Ipsam totam facilis delectus nihil quidem soluta vel est omnis.
-                </p>
+                <Link href={`article/${article.slug}`}>
+                    <p className='text-2xl text-black font-semibold mb-0.5 line-clamp-2'>
+                        {article.title}
+                    </p>
+                </Link>
+                <Link href={`article/${article.slug}`}>
+                    <p className='line-clamp-2 text-slate-500/50 mb-4'>
+                        {article.description}
+                    </p>
+                </Link>
                 <div className='flex justify-between items-center text-xs text-slate-500/50'>
-                    <span className=' mb-4'>Read more...</span>
+                    <Link href={`article/${article.slug}`}>
+                        <span className=' mb-4'>Read more...</span>
+                    </Link>
                     <ul className='flex items-center gap-1'>
-                        <li className='px-1.5 rounded-full border border-slate-400/70 leading-5 cursor-pointer'>rerum</li>
-                        <li className='px-1.5 rounded-full border border-slate-400/70 leading-5 cursor-pointer'>maiores</li>
-                        <li className='px-1.5 rounded-full border border-slate-400/70 leading-5 cursor-pointer'>omnis</li>
-                        <li className='px-1.5 rounded-full border border-slate-400/70 leading-5 cursor-pointer'>quae</li>
+                        {article.tagList.map(tag => (
+                            <li
+                                key={tag}
+                                className='px-1.5 rounded-full border border-slate-400/70 leading-5 cursor-pointer hover:border-green-main'
+                                onClick={() => setSelectedTag(tag)}
+                            >
+                                {tag}
+                            </li>
+                        ))}
                     </ul>
                 </div>
             </div>

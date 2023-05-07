@@ -3,8 +3,10 @@
 import { useState } from 'react'
 import UserAPI from '@/app/lib/api/user'
 import ErrorList from './ErrorList'
+import { useRouter } from 'next/navigation'
 
 const RegisterForm = () => {
+    const router = useRouter()
 
     const [userRegister, setUserRegister] = useState({
         username: '',
@@ -25,6 +27,10 @@ const RegisterForm = () => {
                 const { data, status } = await UserAPI.register(userRegister)
                 if (status !== 200) {
                     setErrors(data.errors)
+                }
+                if (data) {
+                    window.localStorage.setItem("user", JSON.stringify(data.user))
+                    router.push("/")
                 }
             } catch (error) {
                 console.log(error)
@@ -60,7 +66,7 @@ const RegisterForm = () => {
                 />
                 <button
                     type='submit'
-                    className='bg-green-main py-3 px-6 rounded-md float-right text-xl text-white hover:bg-green-main-dark'
+                    className='btn-auth'
                     onClick={handleCheckRegister}
                 >
                     Sign up

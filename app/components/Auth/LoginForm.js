@@ -2,8 +2,10 @@
 import { useState } from 'react'
 import UserAPI from '../../lib/api/user'
 import ErrorList from './ErrorList'
+import { useRouter } from 'next/navigation'
 
 const LoginForm = () => {
+    const router = useRouter()
 
     const [userLogin, setUserLogin] = useState({
         email: '',
@@ -23,6 +25,10 @@ const LoginForm = () => {
                 const { data, status } = await UserAPI.login(userLogin)
                 if (status !== 200) {
                     setErrors(data.errors)
+                } 
+                if(data) {
+                    window.localStorage.setItem("user", JSON.stringify(data.user))
+                    router.push("/")
                 }
             } catch (error) {
                 console.log(error)
@@ -53,7 +59,7 @@ const LoginForm = () => {
 
                 <button
                     type='submit'
-                    className='bg-green-main py-3 px-6 rounded-md float-right text-xl text-white hover:bg-green-main-dark'
+                    className='btn-auth'
                     onClick={handleCheckLogin}
                 >
                     Sign in

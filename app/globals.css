@@ -5,6 +5,10 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    @apply min-h-screen relative pb-28;
+  }
+
   body {
     @apply font-Titillium-Web;
   }
@@ -23,12 +27,40 @@
 }
 
 @layer components {
+  .banner {
+    @apply p-8 text-center text-white shadow-inner shadow-black/20 mb-8;
+  }
+
+  .author-container {
+    @apply flex items-center;
+  }
+
   .pagination-items {
     @apply flex justify-center items-center py-2 px-3 border border-slate-500/40 max-w-max cursor-pointer hover:bg-gray-200;
   }
 
   .pagination-items.active {
     @apply bg-green-main text-white hover:bg-green-main;
+  }
+
+  .header-article-list {
+    @apply py-2 px-4 border-b max-w-max text-gray-500/80 font-semibold border-b-transparent;
+  }
+
+  .header-article-list.active {
+    @apply border-green-main text-green-main border-b-green-main;
+  }
+
+  .loading-spinner {
+    @apply animate-loader relative w-10 h-10 my-[90px] mx-auto rounded-full border-4 border-black/10 border-l-gray-600;
+  }
+
+  .btn-auth {
+    @apply bg-green-main max-w-fit py-3 px-6 rounded-md float-right text-xl text-white hover:bg-green-main-dark;
+  }
+
+  .article-btn-like {
+    @apply px-2 py-1 rounded-sm flex items-center border border-green-main text-sm gap-1 text-green-main leading-4 h-7 hover:text-white hover:bg-green-main; 
   }
 
 }

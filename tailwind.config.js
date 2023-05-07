@@ -22,10 +22,20 @@ module.exports = {
       backgroundColor: {
         'green-main': 'rgb(91, 184, 92)',
         'green-main-dark': 'rgb(68, 157, 68)',
+        'slate-750': 'rgb(51, 51, 51)'
       },
       borderColor: {
         'green-main': 'rgb(91, 184, 92)',
         'green-main-dark': 'rgb(68, 157, 68)',
+      },
+      keyframes: {
+        'spin': {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" }
+        }
+      },
+      animation: {
+        'loader': 'spin 0.5s infinite linear'
       }
     },
   },

@@ -1,63 +1,70 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ArticleItem from './ArticleItem'
 import ArticleAPI from '../../lib/api/article'
+import Pagination from '../layout/Pagination'
+import { useTagContext } from '@/app/context/TagContext'
+import Loader from '../layout/Loader'
 
-const ArticleList = ({ articles }) => {
+
+const ArticleList = () => {
     const [currentPage, setCurrentPage] = useState(1)
+    const [articles, setArticles] = useState([])
+    const [toltalPages, setToltalPages] = useState()
+    const { selectedTag, setSelectedTag } = useTagContext()
+
+
+    useEffect(() => {
+        setArticles([])
+        const getArticles = async () => {
+            try {
+                let res
+                if (selectedTag !== '') {
+                    res = await ArticleAPI.Articles((currentPage - 1) * 10, selectedTag)
+                } else {
+                    res = await ArticleAPI.Articles(currentPage * 10)
+                }
+                setArticles(res.data.articles)
+                setToltalPages(Math.ceil((res.data.articlesCount) / 10))
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getArticles()
+    }, [currentPage, selectedTag])
+
+    if (articles.length === 0) {
+        return <Loader />
+    }
 
     return (
-        <div>
-            <ul>
-                <li className='py-2 px-4 border-b-2 border-green-main max-w-max text-green-main'>
+        <>
+            <ul className='flex items-center'>
+                <li
+                    className='header-article-list cursor-pointer'
+                    onClick={() => setSelectedTag('')}
+                >
                     Global Feed
                 </li>
+                {
+                    selectedTag && (
+                        <li className='py-2 px-4 border-b-2 border-green-main max-w-max text-green-main'>
+                            #{selectedTag}
+                        </li>
+                    )
+                }
             </ul>
-            {[1, 2, 3, 4, 5].map(numb => <div key={numb}><ArticleItem /></div>)}
+            {articles.map(article => <div key={article.slug}><ArticleItem article={article} /></div>)}
             <ul className='flex'>
-                <li className='pagination-items rounded-tl-md rounded-bl-md'>
-                    {"<<"}
-                </li>
-                {currentPage !== 1 && (
-                    <li className='pagination-items'>{"<"}</li>
-                )}
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(page => (
-                    <li
-                        className={`pagination-items ${currentPage === page ? 'active' : ''}`}
-                        key={page}
-                        onClick={() => setCurrentPage(page)}
-                    >
-                        {page}
-                    </li>
-                ))}
-                {currentPage !== 10 && (
-                    <li className='pagination-items'>{">"}</li>
-                )}
-                <li className='pagination-items rounded-tr-md rounded-br-md'>
-                    {">>"}
-                </li>
+                <Pagination
+                    totalPage={toltalPages}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                />
             </ul>
-        </div>
+        </>
     )
-}
-
-
-export const getStaticProps = async () => {
-    try {
-        const res = await ArticleAPI.Articles()
-        const articles = res.data
-        return {
-            props: {
-                articles,
-            },
-        }
-    } catch (error) {
-        console.log(error)
-        return {
-            props: {}
-        }
-    }
 }
 
 export default ArticleList

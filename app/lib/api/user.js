@@ -1,4 +1,5 @@
 import axios from "axios"
+import { headers } from "next/dist/client/components/headers"
 
 const UserAPI = {
     login: async (loginInfo) => {
@@ -26,6 +27,32 @@ const UserAPI = {
                         username: registerInfo.username,
                         email: registerInfo.email,
                         password: registerInfo.password
+                    }
+                }
+            )
+            return res
+        } catch (error) {
+            return error.response
+        }
+    },
+    getProfile: async (username) => {
+        try {
+            const res = await axios.get(
+                `${process.env.NEXT_PUBLIC_BASE_URL}/profiles/${username}`,
+            )
+            return res
+        } catch (error) {
+            return error.response
+        }
+    },
+    updateProfile: async (user, token) => {
+        try {
+            const res = await axios.put(
+                `${process.env.NEXT_PUBLIC_BASE_URL}/user`,
+                { user },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
                     }
                 }
             )
