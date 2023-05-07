@@ -5,10 +5,7 @@ import { useRouter } from 'next/navigation'
 import UserAPI from '@/app/lib/api/user'
 
 const Settings = ({ params }) => {
-    let user
-    if (typeof window !== 'undefined') {
-        user = JSON.parse(window.localStorage.getItem('user'))
-    }
+    const user = JSON.parse(localStorage.getItem('user')).user
     const router = useRouter()
 
     const [userInfo, setUserInfo] = useState({

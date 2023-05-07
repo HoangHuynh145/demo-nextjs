@@ -25,12 +25,9 @@ const LoginForm = () => {
                 const { data, status } = await UserAPI.login(userLogin)
                 if (status !== 200) {
                     setErrors(data.errors)
-                } 
-                if(data) {
-                    if (typeof window !== 'undefined') {
-                        window.localStorage.setItem("user", JSON.stringify(data.user))
-                    }
-                    
+                }
+                if (data) {
+                    localStorage.setItem("user", JSON.stringify(data))
                     router.push("/")
                 }
             } catch (error) {

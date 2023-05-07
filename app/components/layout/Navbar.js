@@ -7,10 +7,7 @@ import NavbarItemsAuth from '../common/NavbarItemsAuth';
 import NavbarItemsUser from '../common/NavbarItemsUser';
 
 const Navbar = () => {
-    let user
-    if (typeof window !== 'undefined') {
-        user = JSON.parse(window.localStorage.getItem('user'))
-    }
+    const user = JSON.parse(localStorage.getItem('user')).user
     const pathname = usePathname();
     const routeUser = pathname.split('/')[2]
 

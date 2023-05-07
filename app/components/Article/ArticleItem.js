@@ -8,10 +8,7 @@ import Link from 'next/link'
 import ArticleAPI from '@/app/lib/api/article'
 
 const ArticleItem = ({ article }) => {
-    let user
-    if (typeof window !== 'undefined') {
-        user = JSON.parse(window.localStorage.getItem('user'))
-    }
+    const user = JSON.parse(localStorage.getItem('user')).user
     const { setSelectedTag } = useTagContext()
     const [favoriteState, setFavoriteState] = useState({
         favoritesCount: article.favoritesCount,
