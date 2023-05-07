@@ -27,7 +27,10 @@ const LoginForm = () => {
                     setErrors(data.errors)
                 } 
                 if(data) {
-                    window.localStorage.setItem("user", JSON.stringify(data.user))
+                    if (typeof window !== 'undefined') {
+                        window.localStorage.setItem("user", JSON.stringify(data.user))
+                    }
+                    
                     router.push("/")
                 }
             } catch (error) {
